@@ -50,6 +50,9 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-toolbar-title v-if="authUser" @click="signOut" style="cursor: pointer">
+        Sign Out
+      </v-toolbar-title>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -111,6 +114,16 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
+    }
+  },
+  methods: {
+    async signOut () {
+      try {
+        await this.$fire.auth.signOut()
+        this.$router.go()
+      } catch (err) {
+        this.showErrorAlert(err)
+      }
     }
   }
 }

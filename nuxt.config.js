@@ -1,5 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
+const env = process.env.NODE_ENV
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -25,6 +27,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '@/plugins/globalMixin'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,7 +43,48 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/pwa',
+    '@nuxtjs/firebase'
   ],
+
+  firebase: {
+    config: {
+      apiKey: "AIzaSyBG4fldfzlXDY2nH5sdFdwImGuMDYx2-Dw",
+      authDomain: "smash-stock.firebaseapp.com",
+      projectId: "smash-stock",
+      storageBucket: "smash-stock.appspot.com",
+      messagingSenderId: "983187948696",
+      appId: "1:983187948696:web:0c6bdf2d13885b679b7ced",
+      measurementId: "G-EMVGES98ZG",
+      databaseURL: ''
+    },
+    services: {
+      auth: {
+        persistence: 'local',
+        initialize: {
+          onAuthStateChangedAction: 'onAuthStateChangedAction'
+        },
+        ssr: true
+      },
+      analytics: {
+        collectionEnabled: true
+      }
+    }
+  },
+
+  pwa: {
+    meta: false,
+    icon: false,
+
+    workbox: {
+      importScripts: [
+        '/firebase-auth-sw.js'
+      ],
+      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+      // only set this true for testing and remember to always clear your browser cache in development
+      dev: env === 'development'
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -63,5 +107,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  server: {
+    port: 3003
   }
 }
